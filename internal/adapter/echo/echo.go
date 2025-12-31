@@ -29,7 +29,7 @@ func (echoAdpater *EchoAdapter) Run() {
 	userServiceInterface = service.NewUserService()
 
 	userController := newUserController(userServiceInterface)
-	e.GET("/test", userController.test)
+	e.GET("/user/test", userController.test)
 
 	e.Logger.Fatal(e.Start(":8080"))
 
