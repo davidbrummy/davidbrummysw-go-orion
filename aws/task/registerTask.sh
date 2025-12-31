@@ -1,0 +1,1 @@
+aws ecs register-task-definition --cli-input-json file://$HOME/go/src/github.com/davidbrummysw/davidbrummysw-go-orion/aws/task/taskDefinition.json

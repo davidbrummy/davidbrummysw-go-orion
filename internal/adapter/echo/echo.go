@@ -3,6 +3,7 @@ package echo
 import (
 	"net/http"
 
+	"github.com/davidbrummysw/davidbrummysw-go-orion/internal/core/service"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,6 +24,12 @@ func (echoAdpater *EchoAdapter) Run() {
 	e.GET("/v", func(c echo.Context) error {
 		return c.String(http.StatusOK, "0.38")
 	})
+
+	var userServiceInterface UserServiceInterface
+	userServiceInterface = service.NewUserService()
+
+	userController := newUserController(userServiceInterface)
+	e.GET("/test", userController.test)
 
 	e.Logger.Fatal(e.Start(":8080"))
 

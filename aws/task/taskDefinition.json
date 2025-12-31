@@ -1,0 +1,40 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "orion-service-container",
+            "image": "846380751147.dkr.ecr.us-east-1.amazonaws.com/davidbrummysw-registry:orion-service1.0",
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "logConfiguration": {
+               "logDriver": "awslogs",
+               "options": {
+                   "awslogs-group": "/ecs/orion-service",
+                   "awslogs-region": "us-east-1",
+                   "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "environment": [
+
+            ],
+            "cpu": 1024,
+            "memory": 256
+        }
+        
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "runtimePlatform": {
+        "operatingSystemFamily": "LINUX",
+        "cpuArchitecture": "ARM64"
+    },
+    "executionRoleArn": "arn:aws:iam::846380751147:role/ecsTaskExecutionRole",
+    "family": "orion-service",
+    "networkMode": "awsvpc",
+    "cpu": "1024",
+    "memory": "2048"
+}

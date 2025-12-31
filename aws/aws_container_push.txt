@@ -1,0 +1,4 @@
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 846380751147.dkr.ecr.us-east-1.amazonaws.com/davidbrummysw-registry
+docker build -t orion-service1.0 .
+docker tag orion-service1.0 846380751147.dkr.ecr.us-east-1.amazonaws.com/davidbrummysw-registry:orion-service1.0
+docker push 846380751147.dkr.ecr.us-east-1.amazonaws.com/davidbrummysw-registry:orion-service1.0
