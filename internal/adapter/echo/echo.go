@@ -25,8 +25,7 @@ func (echoAdpater *EchoAdapter) Run() {
 		return c.String(http.StatusOK, "0.38")
 	})
 
-	var userServiceInterface UserServiceInterface
-	userServiceInterface = service.NewUserService()
+	var userServiceInterface = service.NewUserService()
 
 	userController := newUserController(userServiceInterface)
 	e.GET("/user/test", userController.test)

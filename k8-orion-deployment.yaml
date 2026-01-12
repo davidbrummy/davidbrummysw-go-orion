@@ -1,0 +1,21 @@
+# my-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orion-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: orion-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: orion-service 
+    spec:
+      containers:
+      - name: orion-service-mk-container
+        image: docker.io/library/davidbrummysw-go-orion-service1.0
+        imagePullPolicy: IfNotPresent # Crucial for local images
+        ports:
+        - containerPort: 8080
