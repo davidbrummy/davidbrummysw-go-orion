@@ -27,11 +27,15 @@ func (controller *LoginController) login(c echo.Context) error {
 		return c.String(http.StatusOK, "error")
 	}
 
-	json, _ := json.Marshal(model)
-	fmt.Println(string(json))
+	jsonLog, _ := json.Marshal(model)
+	fmt.Println(string(jsonLog))
 
 	token := controller.loginServiceInterface.Login(*model.Email, *model.Password)
+
 	stringResponse := NewStringResponseFill(&token)
+
+	jsonLog1, _ := json.Marshal(stringResponse)
+	fmt.Println(string(jsonLog1))
 
 	log.Println("End:LoginController:login")
 
