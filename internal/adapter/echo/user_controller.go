@@ -18,14 +18,27 @@ func newUserController(userServiceInterface UserServiceInterface) *UserControlle
 }
 
 func (controller *UserController) test(c echo.Context) error {
-	log.Println("Start:UserController:test")
+	return controller.getUser(c)
+}
+
+func (controller *UserController) getUser(c echo.Context) error {
+	log.Println("Start:UserController:getUser")
+
+	ctx := c.Request().Context()
+
+	log.Println("UserController:getUser:requestId", ctx.Value(requestIDKey).(string))
+	claims, err := jwtClaims(c)
+	if err != nil {
+		return err
+	}
+	log.Println("UserController:getUser:subject", claims["sub"])
 
 	user := controller.userServiceInterface.Test()
 
 	json, _ := json.Marshal(user)
 	fmt.Println(string(json))
 
-	log.Println("End:UserController:test")
+	log.Println("End:UserController:getUser")
 
 	return c.JSON(http.StatusOK, user)
 }
