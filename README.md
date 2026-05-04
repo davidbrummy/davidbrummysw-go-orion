@@ -1,5 +1,33 @@
 # davidbrummysw-go-orion
 
+## Local Postgres
+
+Create the shared Docker network once:
+
+```sh
+./createNetwork.sh
+```
+
+Start Postgres:
+
+```sh
+make db-up
+```
+
+The default local connection string is:
+
+```sh
+postgres://orion:orion@localhost:5432/orion?sslmode=disable
+```
+
+Override it with `DATABASE_URL` when needed. The Docker dev environment uses the `DATABASE_URL` in `dev.env`.
+
+Stop Postgres:
+
+```sh
+make db-down
+```
+
 To run as K8s
 
 minikube start --driver=docker
@@ -34,4 +62,3 @@ minikube dashboard
 
 
 minikube addons enable ingress
-

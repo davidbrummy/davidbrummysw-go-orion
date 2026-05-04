@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davidbrummysw/davidbrummysw-go-orion/internal/core/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -17,10 +16,15 @@ type contextKey string
 const requestIDKey contextKey = "requestID"
 
 type EchoAdapter struct {
+	userServiceInterface  UserServiceInterface
+	loginServiceInterface LoginServiceInterface
 }
 
-func NewEchoAdapter() *EchoAdapter {
-	return &EchoAdapter{}
+func NewEchoAdapter(userServiceInterface UserServiceInterface, loginServiceInterface LoginServiceInterface) *EchoAdapter {
+	return &EchoAdapter{
+		userServiceInterface:  userServiceInterface,
+		loginServiceInterface: loginServiceInterface,
+	}
 }
 
 // Run implements ports.HTTPPort.
@@ -43,11 +47,8 @@ func (echoAdpater *EchoAdapter) Run() {
 		return c.String(http.StatusOK, "0.38")
 	})
 
-	var userServiceInterface = service.NewUserService()
-	var loginServiceInterface = service.NewLoginService()
-
-	userController := newUserController(userServiceInterface)
-	loginController := newLoginController(loginServiceInterface)
+	userController := newUserController(echoAdpater.userServiceInterface)
+	loginController := newLoginController(echoAdpater.loginServiceInterface)
 
 	e.GET(
 		"/v1/user",

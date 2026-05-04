@@ -33,7 +33,11 @@ func (controller *UserController) getUser(c echo.Context) error {
 	}
 	log.Println("UserController:getUser:subject", claims["sub"])
 
-	user := controller.userServiceInterface.Test()
+	user, err := controller.userServiceInterface.Test(ctx)
+	if err != nil {
+		log.Println("UserController:getUser:error", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to get user")
+	}
 
 	json, _ := json.Marshal(user)
 	fmt.Println(string(json))

@@ -1,21 +1,22 @@
 package service
 
-import "github.com/davidbrummysw/davidbrummysw-go-orion/internal/core/domain"
+import (
+	"context"
+
+	"github.com/davidbrummysw/davidbrummysw-go-orion/internal/core/domain"
+	"github.com/davidbrummysw/davidbrummysw-go-orion/internal/core/ports"
+)
 
 // Adapter implements the DbPort interface
 type UserService struct {
+	userRepository ports.UserRepository
 }
 
-func NewUserService() *UserService {
-	return &UserService{}
+func NewUserService(userRepository ports.UserRepository) *UserService {
+	return &UserService{userRepository: userRepository}
 }
 
 // Test implements ports.UserServicePort.
-func (service *UserService) Test() *domain.User {
-
-	name := "Test Name"
-	uuid := "Test UUID"
-	id := uint64(1)
-
-	return domain.NewUserFill(&id, &uuid, &name)
+func (service *UserService) Test(ctx context.Context) (*domain.User, error) {
+	return service.userRepository.GetUser(ctx)
 }

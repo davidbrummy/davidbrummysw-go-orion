@@ -1,6 +1,8 @@
 package echo
 
 import (
+	"context"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 
@@ -13,16 +15,20 @@ import (
 
 type stubUserService struct {
 	callCount int
+	err       error
 }
 
-func (service *stubUserService) Test() *domain.User {
+func (service *stubUserService) Test(ctx context.Context) (*domain.User, error) {
 	service.callCount++
+	if service.err != nil {
+		return nil, service.err
+	}
 
 	id := uint64(1)
 	uuid := "user-uuid"
 	userName := "Test User"
 
-	return domain.NewUserFill(&id, &uuid, &userName)
+	return domain.NewUserFill(&id, &uuid, &userName), nil
 }
 
 var _ = Describe("UserController", func() {
@@ -67,5 +73,20 @@ var _ = Describe("UserController", func() {
 
 		Expect(responseRecorder.Code).To(Equal(http.StatusUnauthorized))
 		Expect(userService.callCount).To(Equal(0))
+	})
+
+	It("returns an error when the user service fails", func() {
+		userService.err = errors.New("database error")
+		token, err := auth.NewJWTToken("test@example.com")
+		Expect(err).NotTo(HaveOccurred())
+
+		request := httptest.NewRequest(http.MethodGet, "/v1/user", nil)
+		request.Header.Set(echoframework.HeaderAuthorization, "Bearer "+token)
+		responseRecorder := httptest.NewRecorder()
+
+		echoInstance.ServeHTTP(responseRecorder, request)
+
+		Expect(responseRecorder.Code).To(Equal(http.StatusInternalServerError))
+		Expect(userService.callCount).To(Equal(1))
 	})
 })
